@@ -1,0 +1,42 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <h1>Posts</h1>
+
+    <form method="GET" action="{% url 'post_list' %}" style="margin-bottom: 20px; margin-left: 40px;">
+        <input type="text" name="q" value="{{ query }}" style="width: 500px" placeholder="Search by title" />
+        <button type="submit" class="btn btn-primary">Search</button>
+    </form>
+
+    <ul>
+        {% for post in values %}
+            <li style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.content }}</p>
+                <p><strong>Created at:</strong> {{ post.created_at }}</p>
+                <p><strong>Author:</strong> {{ post.author.username }}</p>
+                <button class="btn btn-primary" onclick="location.href='{% url 'comments_of_post' post.id %}'">View Comments</button>
+            </li>
+        {% endfor %}
+    </ul>
+
+    <br>
+    <div class="pagination" style="display: flex; justify-content: center;">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?page=1&q={{ query }}">&laquo; first</a>
+                <a href="?page={{ page_obj.previous_page_number }}&q={{ query }}" style="margin-left: 10px; margin-right: 10px">previous</a>
+            {% endif %}
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}&q={{ query }}" style="margin-left: 10px">next</a>
+                <a href="?page={{ page_obj.paginator.num_pages }}&q={{ query }}" style="margin-left: 10px">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+    <br>
+    <br>
+{% endblock %}
+

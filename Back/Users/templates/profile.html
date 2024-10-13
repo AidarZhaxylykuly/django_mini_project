@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <br>
+    <button class="btn btn-primary" onclick="window.history.back();"> < Return </button>
+
+    {% if request.user.id != profile.user.id %}
+        <h1>{{ profile.user.username }}'s Profile</h1>
+        <p><strong>Bio:</strong> {{ profile.bio }}</p>
+        <img src="{{ profile.profile_picture.url }}" alt="Profile Picture">
+        <br>
+        <br>
+        <br>
+        <p>___________________________________________</p>
+        {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+
+        {% if request.user.is_authenticated %}
+            <form method="POST" action="{% url 'follow_profile' profile.user.id %}">
+                {% csrf_token %}
+                <button type="submit">Follow</button>
+            </form>
+            <form method="POST" action="{% url 'unfollow_profile' profile.user.id %}">
+                {% csrf_token %}
+                <button type="submit">Unfollow</button>
+            </form>
+        {% endif %}
+    {% elif request.user.id == profile.user.id %}
+        <h1>My Profile</h1>
+        <form method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit">Save</button>
+        </form>
+        <p>___________________________________________</p>
+        <button class="btn btn-primary" onclick="location.href='{% url 'create_post' %}'">My Posts</button>
+        <form method="POST" action="{% url 'logout' %}" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger">Logout</button>
+        </form>
+    {% endif %}
+{% endblock %}

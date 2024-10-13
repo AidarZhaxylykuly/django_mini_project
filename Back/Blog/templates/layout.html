@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Posts</title>
+</head>
+<body>
+<div style="background-color: grey; padding: 30px; position: fixed; top: 0; left: 0; right: 0; z-index: 1000;">
+    <div style="position: fixed; top: 20px; right: 1350px; z-index: 800;">
+        <button class="btn btn-primary" onclick="location.href='{% url 'post_list' %}'"> Main Page </button>
+    </div>
+    <div style="position: fixed; top: 20px; right: 20px; z-index: 1000;">
+    {% if request.user.is_authenticated %}
+        <button class="btn btn-primary" onclick="location.href='{% url 'create_or_update_profile' %}'"> My Profile </button>
+    {% else %}
+        <button class="btn btn-primary" onclick="location.href='{% url 'login' %}'"> Log In </button>
+    {% endif %}
+    </div>
+</div>
+<br>
+<br>
+    {% block content %}
+    {% endblock %}
+</body>
+</html>

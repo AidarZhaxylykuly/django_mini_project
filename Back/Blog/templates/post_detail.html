@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+    <br>
+    <button class="btn btn-primary" onclick="window.history.back();"> < Return </button>
+    <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 10px; border-radius: 5px;">
+    <h1>{{ post.title }}</h1>
+    <p>{{ post.content }}</p>
+    <p><strong>Created at:</strong> {{ post.created_at }}</p>
+    <p>
+        <strong>Author:</strong>
+        {% if request.user.id != post.author.id %}
+            <a href="{% url 'profile' post.author.id %}">{{ post.author.username }}</a>
+        {% else %}
+            <a href="{% url 'create_or_update_profile' %}">{{ post.author.username }}</a>
+        {% endif %}
+    </p>
+    </div>
+    <br>
+    <h3>Add a Comment</h3>
+    <form method="POST" action="{% url 'create_comment' post.id %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit">Submit</button>
+    </form>
+    <br>
+    <br>
+    <h2>Comments</h2>
+    <ul>
+        {% for comment in values %}
+            <li>
+                <p>{{ comment.content }}</p>
+                <p><strong>Author:</strong>
+                    {% if request.user.id != comment.author.id %}
+                        <a href="{% url 'profile' comment.author.id %}">{{ comment.author.username }}</a>
+                    {% else %}
+                        <a href="{% url 'create_or_update_profile' %}">{{ comment.author.username }}</a>
+                    {% endif %}
+                </p>
+                <p><strong>Created at:</strong> {{ comment.created_at }}</p>
+                <p>______________________________________________________________</p>
+            </li>
+        {% endfor %}
+    </ul>
+{% endblock %}
